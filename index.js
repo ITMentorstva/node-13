@@ -4,6 +4,8 @@ const { handleStaticFiles } = require('./src/handlers/staticHandler');
 const { handleApiCall } = require('./src/handlers/apiHandler');
 const { handlePage } = require('./src/handlers/pageHandler');
 
+require('./src/listeners/pageListener');
+
 const server = http.createServer( (req, res) => {
 
     if(req.url.startsWith('/public/')) {
