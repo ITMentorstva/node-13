@@ -1,0 +1,19 @@
+
+<%- name %>
+
+<% if(name === 'Toma') { %>
+    <p>Hello Toma</p>
+<% } else { %>
+    <p>Nije toma</p>
+<% } %>
+
+<div id="products-container">
+    <% products.forEach(product => { %>
+        <div class="product-card">
+            <p class="product-name"><%- product.name %></p>
+            <p class="product-price">$<%- product.price %></p>
+            <p class="product-amount">Available: <%- product.amount %></p>
+            <a href="/product/<%- product.slug %>">Visit product</a>
+        </div>
+    <% }) %>
+</div>

@@ -2,7 +2,8 @@
 const http = require('http');
 const { handleStaticFiles } = require('./src/handlers/staticHandler');
 const { handleApiCall } = require('./src/handlers/apiHandler');
-const { handlePage } = require('./src/handlers/pageHandler');
+const { handlePage, handleAboutPage } = require('./src/handlers/pageHandler');
+const { products } = require('./src/data/products');
 
 require('./src/listeners/pageListener');
 
@@ -19,6 +20,21 @@ const server = http.createServer( (req, res) => {
     if(req.url === '/') {
         handlePage(req, res);
         return;
+    } else if(req.url === '/about') {
+        handleAboutPage(req, res);
+        return;
+    }
+
+    const productMatch = req.url.match(/^\/product\/([\w-]+)$/);
+    if(productMatch) {
+
+        const slug = productMatch[1];
+        const product = products.find(p => p.slug === slug);
+
+        if(product) {
+            res.writeHead(200, { "Content-Type": 'text/plain' });
+            return res.end("Hello ");
+        }
     }
 
     res.writeHead(404, { "Content-Type": 'text/plain' });
