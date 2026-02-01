@@ -12,5 +12,10 @@ async function getAllUsers() {
     return rows;
 }
 
+async function userExists(email) {
+    const [rows] = await pool.query("SELECT id FROM users WHERE email = ? LIMIT 1", [email]);
+    return rows.length > 0;
+}
 
-module.exports = { createUser, getAllUsers };
+
+module.exports = { createUser, getAllUsers, userExists };

@@ -2,8 +2,8 @@
 const http = require('http');
 const { handleStaticFiles } = require('./src/handlers/staticHandler');
 const { handleApiCall } = require('./src/handlers/apiHandler');
-const { handlePage, handleAboutPage } = require('./src/handlers/pageHandler');
-const { getAllUsers } = require('./src/services/userService');
+const { handlePage } = require('./src/handlers/pageHandler');
+const { fetchSingleProduct, getAllProducts } = require('./src/services/productService');
 
 require('./src/listeners/pageListener');
 
@@ -18,27 +18,39 @@ const server = http.createServer( async (req, res) => {
     }
 
     if(req.url === '/') {
-
-        const data = await getAllUsers();
-
-        await handlePage(req, res);
+        const products = await getAllProducts();
+        handlePage("home", {name: "Toma", products: products}, req, res);
         return;
     } else if(req.url === '/about') {
-        handleAboutPage(req, res);
+        handlePage("about", {}, req, res);
         return;
+    } else if(req.url === '/register') {
+        handlePage("register", {}, req, res);
+        return;
+    } else if(req.url === '/login') {
+        handlePage("login", {}, req, res);
+        return
     }
 
-    // const productMatch = req.url.match(/^\/product\/([\w-]+)$/);
-    // if(productMatch) {
-    //
-    //     const slug = productMatch[1];
-    //     const product = products.find(p => p.slug === slug);
-    //
-    //     if(product) {
-    //         res.writeHead(200, { "Content-Type": 'text/plain' });
-    //         return res.end("Hello ");
-    //     }
-    // }
+    /**
+     * /register
+     *  -> form: email, sifra, potvrdjena (repeated password) sifra, checkbox "I agree with site rules"
+     *
+     *  /login
+     *  -> form: email, sifra
+     */
+
+    const productMatch = req.url.match(/^\/product\/([\w-]+)$/);
+    if(productMatch) {
+
+        const slug = productMatch[1];
+        const product = await fetchSingleProduct(slug);
+
+        if(product) {
+            handlePage("permalink", {product: product}, req, res);
+            return;
+        }
+    }
 
     res.writeHead(404, { "Content-Type": 'text/plain' });
     return res.end("404 page not found");

@@ -1,0 +1,37 @@
+<form action="/api/register" method="post">
+
+    <div>
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required>
+    </div>
+
+    <div>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="password">Šifra:</label><br>
+        <input type="password" id="password" name="password" required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="password_confirm">Potvrđena šifra:</label><br>
+        <input type="password" id="password_confirm" name="password_confirm" required>
+    </div>
+
+    <br>
+
+    <div>
+        <input type="checkbox" id="rules" name="rules" required>
+        <label for="rules">I agree with site rules</label>
+    </div>
+
+    <br>
+
+    <button type="submit">Submit</button>
+</form>
