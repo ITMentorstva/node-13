@@ -1,6 +1,7 @@
 
 const { createUser, userExists, getUserByEmail } = require('../services/userService');
 const bcrypt = require("bcrypt");
+const { createSession } = require('../services/sessionService');
 
 const querystring = require("node:querystring");
 
@@ -60,8 +61,10 @@ async function handleApiCall(req, res) {
 
             const password = await bcrypt.hash(formData.password, 10);
 
-            createUser(formData.name, formData.email, password);
+            const userId = await createUser(formData.name, formData.email, password);
+            const sessionId = createSession(userId);
 
+            res.setHeader('Set-Cookie', `sid=${sessionId}; HttpOnly; Path=/`);
             res.writeHead(200, { 'Content-Type': 'application/json'});
             return res.end(JSON.stringify({success: true, message: "Created new user"}));
         });
@@ -110,6 +113,9 @@ async function handleApiCall(req, res) {
                 return res.end(JSON.stringify({message: "Wrong password"}));
             }
 
+            const sessionId = createSession(user.id); // sessions: {'qwdqwdqd': {userId: 1}} return qwdqwdqd;
+
+            res.setHeader('Set-Cookie', `sid=${sessionId}; HttpOnly; Path=/`);
             res.writeHead(200, { 'Content-Type': 'application/json'});
             return res.end(JSON.stringify({success: true, message: "Logged in succesfully"}));
         });

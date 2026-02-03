@@ -4,10 +4,14 @@ const { handleStaticFiles } = require('./src/handlers/staticHandler');
 const { handleApiCall } = require('./src/handlers/apiHandler');
 const { handlePage } = require('./src/handlers/pageHandler');
 const { fetchSingleProduct, getAllProducts } = require('./src/services/productService');
+const { getSession } = require('./src/services/sessionService');
+
 
 require('./src/listeners/pageListener');
 
 const server = http.createServer( async (req, res) => {
+
+    const userSession = getSession(req);
 
     if(req.url.startsWith('/public/')) {
         handleStaticFiles(req, res);
@@ -19,7 +23,7 @@ const server = http.createServer( async (req, res) => {
 
     if(req.url === '/') {
         const products = await getAllProducts();
-        handlePage("home", {name: "Toma", products: products}, req, res);
+        handlePage("home", {user: userSession, products: products}, req, res);
         return;
     } else if(req.url === '/about') {
         handlePage("about", {}, req, res);

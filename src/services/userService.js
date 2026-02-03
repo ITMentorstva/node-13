@@ -2,9 +2,10 @@
 const { pool } = require("./mysql");
 
 async function createUser(name, email, password) {
-    await pool.query("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [
+    const [result] = await pool.query("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [
         name, email, password
     ]);
+    return result.insertId;
 }
 
 async function getAllUsers() {
